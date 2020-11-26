@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ForumDetailActivity">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="44dp">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:src="@drawable/icon_back"
+            android:scaleType="centerInside"
+            android:paddingTop="5dp"
+            android:onClick="back"
+            android:paddingBottom="5dp"
+            android:layout_height="30dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Details"
+            android:textSize="18sp"
+            android:textColor="#333"
+            android:layout_height="wrap_content"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:background="#f8f8f8"
+        android:layout_height="10dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:paddingBottom="7dp"
+        android:paddingTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@color/white"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:layout_width="40dp"
+            android:src="@drawable/avatar"
+            android:id="@+id/avatar"
+            android:padding="7.5dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_height="40dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:layout_constraintLeft_toRightOf="@id/avatar"
+            android:layout_marginLeft="5dp"
+            android:text="DIOGLα"
+            android:id="@+id/name"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
+            android:layout_height="wrap_content"/>
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="3days ago"
+            android:id="@+id/time"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
+            android:layout_height="wrap_content"/>
+
+
+
+        <TextView
+            android:layout_width="0dp"
+            app:layout_constraintTop_toBottomOf="@id/avatar"
+            android:layout_marginTop="15dp"
+            app:layout_constraintLeft_toLeftOf="@id/name"
+            app:layout_constraintRight_toRightOf="@id/time"
+            android:id="@+id/details"
+            android:text="It seems like price of gas is going up and down sharply..."
+            android:textSize="13sp"
+            android:maxLines="3"
+            android:layout_height="wrap_content"/>
+
+
+
+
+        <com.russell.exchange.custom.AutoDrawableView
+            android:layout_width="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/details"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/report"
+            android:drawablePadding="8dp"
+            android:onClick="report"
+            android:text="Report spam"
+            android:id="@+id/comment"
+            app:drawable_height="20dp"
+            app:drawable_width="20dp"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:background="#f8f8f8"
+        android:layout_height="10dp"/>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Comments"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:drawablePadding="8dp"
+        android:drawableLeft="@drawable/bg_comments_title"
+        android:layout_height="wrap_content"/>
+    
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/list"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_height="44dp">
+
+        <EditText
+            android:layout_width="0dp"
+            android:id="@+id/send_message"
+            android:layout_weight="1"
+            android:hint="Comment..."
+            android:layout_gravity="center"
+            android:background="@drawable/bg_comment_button"
+            android:gravity="center"
+            android:layout_height="34dp"/>
+
+
+        <com.russell.exchange.custom.AutoDrawableView
+            app:drawable_height="20dp"
+            app:drawable_width="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:drawablePadding="5dp"
+            android:paddingLeft="10dp"
+            android:layout_width="wrap_content"
+            android:text="1"
+            android:onClick="like"
+            android:drawableLeft="@drawable/un_like"
+            android:layout_height="wrap_content"/>
+
+
+        <com.russell.exchange.custom.AutoDrawableView
+            app:drawable_height="20dp"
+            app:drawable_width="20dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:drawablePadding="5dp"
+            android:paddingLeft="10dp"
+            android:layout_width="wrap_content"
+            android:text="1"
+            android:id="@+id/comment_text"
+            android:drawableLeft="@drawable/comment"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="60dp"
+            android:text="send"
+            android:layout_marginLeft="10dp"
+            android:onClick="send"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_send_button"
+            android:gravity="center"
+            android:layout_height="34dp"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
