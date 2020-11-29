@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Exchange</string>
+    <string name="title_activity_top_brokers">TopBrokersActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="android_web_agent">ANDROID_AGENT_NATIVE/2.0&#8194;%1$s</string>
+    <string name="pickerview_submit">submit</string>
+    <string name="pickerview_cancel">cancel</string>
 </resources>

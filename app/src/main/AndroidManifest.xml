@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.russell.exchange">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission
+        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:allowBackup="true"
@@ -9,22 +15,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exchange">
-        <activity android:name=".BookListActivity">
+        <activity android:name=".VideoPlayActivity"></activity>
+        <activity android:name=".MarginCalculatorActivity"></activity>
+        <activity android:name=".CurrencyConverterActivity"></activity>
+        <activity android:name=".VideoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BookDetailsActivity" >
-
-
-        </activity>
+        <activity android:name=".VActivity"></activity>
+        <activity android:name=".ForexCalendarActivity" />
+        <activity android:name=".TradersDetailsActivity"></activity>
+        <activity android:name=".ForexTradersActivity" />
+        <activity android:name=".TopBrokersActivity" />
+        <activity android:name=".ServiceActivity" />
+        <activity android:name=".BookListActivity" />
+        <activity android:name=".BookDetailsActivity" />
         <activity android:name=".ForumDetailActivity" />
         <activity android:name=".NewTopicActivity" />
-        <activity android:name=".ForumActivity">
-
-        </activity>
+        <activity android:name=".ForumActivity" />
         <activity android:name=".MainActivity" />
     </application>
 

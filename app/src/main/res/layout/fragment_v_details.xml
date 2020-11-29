@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:orientation="vertical"
+           android:layout_height="wrap_content">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:text="Experience"
+               android:textColor="#333"
+               android:textSize="14sp"
+               android:paddingLeft="25dp"
+               android:layout_height="wrap_content"/>
+
+           <TextView
+               android:layout_width="match_parent"
+               android:padding="25dp"
+               android:text="In 2007, Dhwani set out in the world of finance as an amateur in the commodities market and pursued it as a full-fledged career from 2010. She worked across top Indian brokerages and a commodity exchange until her collaboration with FXStreet in 2014 as an Editor and Analyst. Her profile included publishing asset news pieces (including cryptocurrencies), technical analysis and covering macroeconomic events.
+
+It was in 2018 that she took charge of the editorial line of FXStreet’s site during the Asian session. She aligns the team and their tasks towards covering all the editorial needs, focusses on the macroeconomic coverage and also advises on the different projects, strategies and products of FXStreet. Besides, she manages the cryptocurrencies coverage during the weekend."
+               android:layout_height="wrap_content"/>
+
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:text="Education"
+               android:textColor="#333"
+               android:textSize="14sp"
+               android:paddingLeft="25dp"
+               android:layout_height="wrap_content"/>
+
+           <TextView
+               android:layout_width="match_parent"
+               android:padding="25dp"
+               android:text="Dhwani holds a post-graduate degree in Business Administration, majoring in Finance and Accountancy from the IES Management College and Research Centre in Mumbai, India."
+               android:layout_height="wrap_content"/>
+
+
+       </LinearLayout>
+
+
+   </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ServiceActivity">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="44dp">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:src="@drawable/icon_back"
+            android:scaleType="centerInside"
+            android:paddingTop="5dp"
+            android:onClick="back"
+            android:paddingBottom="5dp"
+            android:layout_height="30dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Customer service"
+            android:textSize="18sp"
+            android:textColor="#333"
+            android:layout_height="wrap_content"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:background="#f8f8f8"
+        android:layout_height="10dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/list"
+        android:layout_weight="1"/>
+    <View
+        android:layout_width="match_parent"
+        android:background="#f8f8f8"
+        android:layout_height="1dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="15dp"
+        android:layout_height="44dp">
+
+        <EditText
+            android:layout_width="0dp"
+            android:id="@+id/send_message"
+            android:layout_weight="1"
+            android:hint="Input your words..."
+            android:layout_gravity="center"
+            android:background="@drawable/bg_comment_button"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_height="34dp"/>
+
+        <TextView
+            android:layout_width="60dp"
+            android:text="send"
+            android:layout_marginLeft="10dp"
+            android:onClick="send"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_send_button"
+            android:gravity="center"
+            android:layout_height="34dp"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
