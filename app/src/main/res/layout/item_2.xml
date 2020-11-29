@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="40dp"
+        android:text="Long"
+        android:id="@+id/one"
+        android:textColor="#DB0064"
+        android:gravity="center"
+        android:background="@drawable/bg_35"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="15dp"
+        android:layout_height="40dp"/>
+
+    <TextView
+        app:layout_constraintLeft_toRightOf="@id/one"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:text="USD/EUR"
+        android:id="@+id/two"
+        android:textSize="14sp"
+        android:textColor="#333"
+        android:layout_marginLeft="25dp"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/two"
+        android:layout_marginTop="15dp"
+        app:layout_constraintLeft_toLeftOf="@id/two"
+        android:text="Buying price"
+        android:id="@+id/four"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/four"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toLeftOf="@id/four"
+        android:text="64.22"
+        android:layout_height="wrap_content"/>
+
+
+    <View
+        android:layout_width="1dp"
+        app:layout_constraintTop_toTopOf="@id/five"
+        app:layout_constraintBottom_toBottomOf="@id/six"
+        app:layout_constraintLeft_toLeftOf="@id/two"
+        android:background="#333"
+        app:layout_constraintRight_toRightOf="@id/five"
+        android:layout_height="20dp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/two"
+        android:layout_marginTop="15dp"
+        app:layout_constraintLeft_toRightOf="@id/four"
+        android:layout_marginLeft="25dp"
+        android:text="Current price"
+        android:id="@+id/five"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/five"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toLeftOf="@id/five"
+        android:text="64.22"
+        android:id="@+id/six"
+        android:layout_height="wrap_content"/>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="0.1 lot"
+        app:layout_constraintTop_toTopOf="@id/two"
+        app:layout_constraintLeft_toRightOf="@id/two"
+        android:layout_marginLeft="15dp"
+        android:id="@+id/three"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="-14.00"
+        android:textColor="#DB0064"
+        app:layout_constraintLeft_toRightOf="@id/three"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintTop_toTopOf="@id/three"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Close"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_marginRight="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:background="@drawable/bg_send_button"
+        android:layout_height="wrap_content"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

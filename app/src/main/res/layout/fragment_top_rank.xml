@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:padding="25dp"
+        android:layout_height="250dp">
+
+
+
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@drawable/bg_rank_list"
+            android:layout_height="200dp">
+
+
+            <TextView
+                android:layout_width="25dp"
+                android:text="2"
+                android:gravity="center"
+                android:background="@drawable/bg_rabk_three"
+                android:layout_marginTop="15dp"
+                android:id="@+id/rank"
+                android:layout_gravity="center"
+                android:layout_height="25dp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="frankkn"
+                android:id="@+id/two"
+                android:textColor="#333"
+                android:textStyle="bold"
+                android:layout_marginTop="25dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="USD"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="8528.68"
+                android:id="@+id/two_money"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/bg_rank_list"
+            android:layout_height="200dp">
+            <TextView
+                android:layout_width="25dp"
+                android:text="1"
+                android:gravity="center"
+                android:background="@drawable/bg_rabk_three"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_height="25dp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="frankkn"
+                android:id="@+id/one"
+                android:textColor="#333"
+                android:textStyle="bold"
+                android:layout_marginTop="25dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="USD"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="8528.68"
+                android:id="@+id/one_money"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="25dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/bg_rank_list"
+            android:layout_height="200dp">
+            <TextView
+                android:layout_width="25dp"
+                android:text="3"
+                android:gravity="center"
+                android:background="@drawable/bg_rabk_three"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_height="25dp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="frankkn"
+                android:id="@+id/three"
+                android:textColor="#333"
+                android:textStyle="bold"
+                android:layout_marginTop="25dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="USD"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="8528.68"
+                android:id="@+id/three_money"
+                android:layout_marginTop="15dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/list"
+        android:layout_height="0dp"/>
+
+</LinearLayout>

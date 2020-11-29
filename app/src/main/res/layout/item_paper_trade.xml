@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="15dp"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Paper Trade"
+        android:textColor="#333"
+        android:textSize="16sp"
+        android:id="@+id/title"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:layout_width="30dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="30dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Market price"
+        android:layout_marginTop="15dp"
+        android:textColor="#333"
+        android:id="@+id/market_price"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_height="wrap_content"/>
+
+
+    <ImageView
+        android:layout_width="25dp"
+        app:layout_constraintTop_toTopOf="@id/market_price"
+        app:layout_constraintBottom_toBottomOf="@id/market_price"
+        app:layout_constraintLeft_toRightOf="@id/market_price"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/ic_show"
+        android:layout_height="0dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Lots"
+        android:layout_marginTop="15dp"
+        android:textColor="#333"
+        android:id="@+id/lots"
+        app:layout_constraintTop_toBottomOf="@id/market_price"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lots"
+        android:layout_marginTop="15dp"
+        android:id="@+id/lots_list"
+        android:layout_height="25dp"/>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Margin (USD)"
+        android:layout_marginTop="25dp"
+        android:textColor="#333"
+        android:id="@+id/margin"
+        app:layout_constraintTop_toBottomOf="@id/lots_list"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/margin"
+        android:layout_marginTop="15dp"
+        android:id="@+id/margin_list"
+        android:layout_height="25dp"/>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Fee (USD)"
+        android:layout_marginTop="15dp"
+        android:textColor="#333"
+        android:id="@+id/fee"
+        app:layout_constraintTop_toBottomOf="@id/margin_list"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_height="wrap_content"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="10.23"
+        android:textColor="#333"
+        app:layout_constraintTop_toTopOf="@+id/fee"
+        app:layout_constraintBottom_toBottomOf="@+id/fee"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="wrap_content"/>
+
+
+    <TextView
+        android:layout_width="0dp"
+        app:layout_constraintTop_toBottomOf="@id/fee"
+        android:layout_marginTop="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:text="Long 64.22"
+        android:textColor="@color/white"
+        android:background="#009900"
+        android:gravity="center"
+        android:layout_height="44dp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,19 +15,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exchange">
-        <activity android:name=".VideoPlayActivity"></activity>
-        <activity android:name=".MarginCalculatorActivity"></activity>
-        <activity android:name=".CurrencyConverterActivity"></activity>
-        <activity android:name=".VideoActivity">
+        <activity android:name=".TransactionActivity"></activity>
+        <activity android:name=".PositionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".VActivity"></activity>
+        <activity android:name=".VideoPlayActivity" />
+        <activity android:name=".MarginCalculatorActivity" />
+        <activity android:name=".CurrencyConverterActivity" />
+        <activity android:name=".VideoActivity"></activity>
+        <activity android:name=".VActivity" />
         <activity android:name=".ForexCalendarActivity" />
-        <activity android:name=".TradersDetailsActivity"></activity>
+        <activity android:name=".TradersDetailsActivity" />
         <activity android:name=".ForexTradersActivity" />
         <activity android:name=".TopBrokersActivity" />
         <activity android:name=".ServiceActivity" />
@@ -36,7 +38,7 @@
         <activity android:name=".ForumDetailActivity" />
         <activity android:name=".NewTopicActivity" />
         <activity android:name=".ForumActivity" />
-        <activity android:name=".MainActivity" />
+
     </application>
 
 </manifest>

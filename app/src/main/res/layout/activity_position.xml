@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PositionActivity">
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:paddingTop="8dp"
+                android:text="My Pager"
+                android:textColor="@color/white"
+                android:id="@+id/pager"
+                android:background="@drawable/bg_pager"
+                android:paddingBottom="8dp"
+                android:paddingRight="25dp"
+                android:paddingLeft="25dp"
+                android:layout_height="wrap_content"/>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:paddingTop="8dp"
+                android:text="Top players"
+                android:textColor="#333"
+                android:id="@+id/players"
+                android:background="@drawable/bg_player_un"
+                android:paddingBottom="8dp"
+                android:paddingRight="25dp"
+                android:paddingLeft="25dp"
+                android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/container"
+        android:layout_height="0dp"/>
+
+
+</LinearLayout>

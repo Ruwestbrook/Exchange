@@ -20,6 +20,7 @@ class VActivity : AppCompatActivity() {
 
     private var viewpager: ViewPager2? = null
     private val mutableList= mutableListOf<Fragment>()
+    private val items= arrayListOf("Introduction","Articles")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_v)
@@ -36,7 +37,7 @@ class VActivity : AppCompatActivity() {
         viewpager?.adapter=fragmentPagerAdapter
 
         TabLayoutMediator(tabLayout!!, viewpager!!) { tab, position ->
-            tab.text = "OBJECT ${(position + 1)}"
+            tab.text = items[position]
             viewpager?.currentItem=position
         }.attach()
 
