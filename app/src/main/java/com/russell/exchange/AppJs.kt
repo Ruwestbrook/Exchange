@@ -16,13 +16,14 @@ import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.JsonObject
 import io.branch.referral.util.BranchEvent
+import java.util.*
 
 /**
 @author russell
 @description:
 @date : 2020/11/29 0:47
  */
-class AppJs(val mContext:Context) {
+class AppJs(private val mContext:Context) {
 
 
 
@@ -35,9 +36,12 @@ class AppJs(val mContext:Context) {
     @SuppressLint("HardwareIds")
     @JavascriptInterface
     fun getDeviceId(): String {
-        val tm=mContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        return tm.deviceId
-
+        return try {
+            val tm=mContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            tm.deviceId
+        }catch (e:Exception){
+            UUID.randomUUID().toString().replace("-","")
+        }
     }
 
     /**
@@ -46,17 +50,21 @@ class AppJs(val mContext:Context) {
      */
     @JavascriptInterface
     fun getGoogleId(): String {
-       return Settings.System.getString(mContext.contentResolver, Settings.System.ANDROID_ID);
+        var result=Settings.System.getString(mContext.contentResolver, Settings.System.ANDROID_ID)
+        if(result.isEmpty()){
+            result=   UUID.randomUUID().toString().replace("-","")
+        }
+       return result
     }
 
-//    /**
-//     * 获取pushId
-//     * 个推id 现在只需要空实现传空串
-//     */
-//    @JavascriptInterface
-//    fun takePushId(): String {
-//        return ""
-//    }
+    /**
+     * 获取pushId
+     * 个推id 现在只需要空实现传空串
+     */
+    @JavascriptInterface
+    fun takePushId(): String {
+        return ""
+    }
 //
 //    /**
 //     * 获取fcm 令牌
@@ -76,10 +84,17 @@ class AppJs(val mContext:Context) {
      */
     @JavascriptInterface
     fun getGaId(): String? {
-        if(AdvertisingIdClient.getAdvertisingIdInfo(mContext)==null){
-            return null
+        val lock = Object()
+        var result =""
+        synchronized(lock){
+            try {
+                result=AdvertisingIdClient.getAdvertisingIdInfo(mContext).toString()
+                lock.notifyAll()
+            }catch (e:java.lang.Exception){
+                lock.notifyAll()
+            }
         }
-        return AdvertisingIdClient.getAdvertisingIdInfo(mContext).toString()
+        return result
     }
 
     /**
@@ -109,18 +124,9 @@ class AppJs(val mContext:Context) {
      * @param callbackMethod 回传图片时调用H5的方法名
      */
     @JavascriptInterface
-    fun takePortraitPicture(callbackMethod: String,str: String) {
-        // TODO
-        // 参考实现：成员变量记录下js方法名，图片转成base64字符串后调用该js方法传递给H5
-        // 下面一段代码仅供参考，能实现功能即可
+    fun takePortraitPicture(callbackMethod: String) {
         if (!TextUtils.isEmpty(callbackMethod)) {
-            val builder = StringBuilder(callbackMethod).append("(")
-            builder.append("'").append("data:image/png;base64,$str").append("'")
-            builder.append(")")
-            val methodName = builder.toString()
-            val javaScript = "javascript:$methodName"
-            val  webView=(mContext as WebActivity).getWebView()
-            webView.evaluateJavascript(javaScript, null)
+            (mContext as WebActivity).takePicture(callbackMethod)
         }
     }
 
@@ -140,7 +146,6 @@ class AppJs(val mContext:Context) {
      */
     @JavascriptInterface
     fun shouldForbidSysBackPress(forbid: Int) {
-        //TODO
         if (mContext is WebActivity) {
             //WebActivity成员变量记录下是否禁止
             mContext.setShouldForbidBackPress(forbid)
@@ -156,7 +161,6 @@ class AppJs(val mContext:Context) {
      */
     @JavascriptInterface
     fun forbidBackForJS(forbid: Int, methodName: String) {
-        //TODO
         if (mContext is WebActivity) {
             mContext.setShouldForbidBackPress(forbid)
             //同上
@@ -172,7 +176,6 @@ class AppJs(val mContext:Context) {
      */
     @JavascriptInterface
     fun openBrowser(url: String) {
-        Log.e(TAG, "openBrowser url$url")
         if (mContext is WebActivity) {
             val uri = Uri.parse(url)
             val intent = Intent().apply {
@@ -193,7 +196,6 @@ class AppJs(val mContext:Context) {
     @JavascriptInterface
     fun isContainsName(callbackMethod: String, name: String) {
         var has = false
-        Log.v(TAG, "isContainsName:${callbackMethod};${name}")
         val classMethods = MethodUtil.getClassMethods(AppJs::class.java)
         classMethods?.let {
             for (method in it) {
@@ -209,11 +211,7 @@ class AppJs(val mContext:Context) {
             mContext.runOnUiThread {
                 val webView = mContext.getWebView()
                 val javaScript = "javascript:$callbackMethod('$has')"
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    webView.evaluateJavascript(javaScript, null)
-                } else {
-                    webView.loadUrl(javaScript)
-                }
+                webView.evaluateJavascript(javaScript, null)
             }
         }
     }

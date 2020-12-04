@@ -8,7 +8,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.songsong.exchange"
+        applicationId "com.exchange.etrade.invest"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -64,6 +64,8 @@ dependencies {
     implementation "com.google.android.material:material:1.2.1"
     implementation 'com.bigkoo:pickerview:2.0.8'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
+
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
 
 
 }

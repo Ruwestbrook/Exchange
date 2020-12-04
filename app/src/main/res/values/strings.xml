@@ -12,4 +12,6 @@
     <string name="android_web_agent">ANDROID_AGENT_NATIVE/2.0&#8194;%1$s</string>
     <string name="pickerview_submit">submit</string>
     <string name="pickerview_cancel">cancel</string>
+    <string name="facebook_app_id">659412048048039</string>
+    <string name="fb_login_protocol_scheme">fb659412048048039</string>
 </resources>
