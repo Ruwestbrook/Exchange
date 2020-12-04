@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/container"
+        android:layout_height="0dp"/>
+
+
+    <com.russell.exchange.navigation.BottomNavigationBar
+        android:layout_width="match_parent"
+        app:choose_color="@color/row_soft_color"
+        app:normal_color="@color/no_choose_color"
+        android:id="@+id/bottom_bar"
+        app:image_size="20dp"
+        app:image_top="7dp"
+        app:text_size="10sp"
+        app:text_top="6dp"
+        android:layout_height="50dp"/>
+</LinearLayout>

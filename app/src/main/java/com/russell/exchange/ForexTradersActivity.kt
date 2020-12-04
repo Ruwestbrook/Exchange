@@ -14,7 +14,6 @@ class ForexTradersActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forex_traders)
-        setContentView(R.layout.activity_top_brokers)
         val recyclerView = findViewById<RecyclerView>(R.id.list)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = object : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

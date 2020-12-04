@@ -8,4 +8,22 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="v_color">#f59a23</color>
+    <color name="button_color">#FF262728</color>
+
+    <color name="row_soft_color">#FFF49481</color>
+
+    <color name="bg_color">#FFF5F5F5</color>
+
+    <color name="text_color">#FF262728</color>
+
+
+    <color name="secondary_text_color">#FF999999</color>
+
+    <color name="no_choose_color">#FFD0D2D1</color>
+
+    <color name="position_color">#FFEBEBEB</color>
+
+
+
+    <color name="btn_disable">#cbcbcb</color>
 </resources>

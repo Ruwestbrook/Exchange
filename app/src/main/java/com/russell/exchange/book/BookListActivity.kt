@@ -1,17 +1,15 @@
- package com.russell.exchange
+ package com.russell.exchange.book
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.russell.exchange.R
 
-class BookListActivity : AppCompatActivity() {
+ class BookListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_list)
@@ -33,7 +31,7 @@ class BookListActivity : AppCompatActivity() {
 
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
                 holder.itemView.setOnClickListener {
-                    val intent=Intent(this@BookListActivity,BookDetailsActivity::class.java)
+                    val intent=Intent(this@BookListActivity, BookDetailsActivity::class.java)
                     intent.putExtra("type",position)
                     startActivity(intent)
                 }

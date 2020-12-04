@@ -13,5 +13,16 @@
         <attr name="drawable_height" format="dimension"/>
         <attr name="drawable_width" format="dimension"/>
     </declare-styleable>
+    <declare-styleable name="BottomNavigationBar">
 
+        <attr name="choose_color" format="color"/>
+        <attr name="normal_color" format="color"/>
+        <attr name="text_size" format="dimension"/>
+        <attr name="image_top" format="dimension"/>
+        <attr name="image_size" format="dimension"/>
+        <attr name="image_height" format="dimension"/>
+        <attr name="image_width" format="dimension"/>
+        <attr name="text_top" format="dimension"/>
+
+    </declare-styleable>
 </resources>

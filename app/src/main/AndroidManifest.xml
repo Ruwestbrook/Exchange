@@ -20,7 +20,13 @@
         android:supportsRtl="true"
         tools:replace="android:theme"
         android:theme="@style/Theme.Exchange">
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".SplashActivity">
 
 
@@ -63,27 +69,20 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".TransactionActivity" />
         <activity android:name=".PositionActivity" />
         <activity android:name=".VideoPlayActivity" />
         <activity android:name=".MarginCalculatorActivity" />
-        <activity android:name=".CurrencyConverterActivity" />
         <activity android:name=".VideoActivity" />
         <activity android:name=".VActivity" />
         <activity android:name=".WebActivity" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ForexCalendarActivity" />
         <activity android:name=".TradersDetailsActivity" />
         <activity android:name=".ForexTradersActivity" />
-        <activity android:name=".TopBrokersActivity" />
         <activity android:name=".ServiceActivity" />
-        <activity android:name=".BookListActivity" />
-        <activity android:name=".BookDetailsActivity" />
+        <activity android:name=".book.BookListActivity" />
+        <activity android:name=".book.BookDetailsActivity" />
         <activity android:name=".ForumDetailActivity" />
         <activity android:name=".NewTopicActivity" />
         <activity android:name=".ForumActivity" />

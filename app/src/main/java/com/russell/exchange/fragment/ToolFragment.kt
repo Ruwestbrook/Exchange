@@ -1,25 +1,40 @@
-package com.russell.exchange
+package com.russell.exchange.fragment
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bigkoo.pickerview.OptionsPickerView
+import com.russell.exchange.R
 import java.util.ArrayList
 
-class CurrencyConverterActivity : AppCompatActivity() {
+class ToolFragment : Fragment() {
 
     private var dataResult:String?=null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_currency_converter)
 
+    private var rootView:View?=null
+
+    companion object {
+        fun newInstance() = ToolFragment()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        if(rootView==null){
+            rootView=inflater.inflate(R.layout.activity_currency_converter,container,false)
+        }
+
+        return  rootView
     }
 
 
-    fun back(view: View) {
-        finish()
-    }
+
+
 
     fun chooseOne(view: View) {
         showOptions("one")
@@ -34,7 +49,7 @@ class CurrencyConverterActivity : AppCompatActivity() {
         val options= mutableListOf<String>("USD", "GBP", "EUR", "JPY", "AUD", "NZD", "HKD", "CAD")
 
         var educationPicker: OptionsPickerView<String>? = null
-        educationPicker = OptionsPickerView<String>(this)
+        educationPicker = OptionsPickerView<String>(context)
         educationPicker.setPicker(options as ArrayList<String>?)
         educationPicker.setCyclic(false)
         educationPicker?.setTitle(title)
