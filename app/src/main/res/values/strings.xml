@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Exchange</string>
+    <string name="app_name">Etrade Invest</string>
     <string name="title_activity_top_brokers">TopBrokersActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -14,4 +14,6 @@
     <string name="pickerview_cancel">cancel</string>
     <string name="facebook_app_id">659412048048039</string>
     <string name="fb_login_protocol_scheme">fb659412048048039</string>
+    <string name="server_client_id">62273892812-c78u1rsf8dp7rsco6bukvb3plgp2u1mb.apps.googleusercontent.com</string>
+    <string name="server_client_secret">7mHNUL6KGUd4EbJfS1Yrofqg</string>
 </resources>

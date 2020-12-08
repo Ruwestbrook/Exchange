@@ -49,4 +49,8 @@ class PositionActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .show(myPaperFragment).hide(topPlayersFragment).commit()
     }
+
+    fun back(view: View) {
+        finish()
+    }
 }

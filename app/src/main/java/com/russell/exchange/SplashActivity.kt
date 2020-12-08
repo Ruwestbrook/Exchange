@@ -31,25 +31,23 @@ class SplashActivity : AppCompatActivity() {
 
     var imageView:ImageView?=null
     var textView:TextView?=null
-    val handler= @SuppressLint("HandlerLeak")
+    private val handler= @SuppressLint("HandlerLeak")
     object:Handler(){
 
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            if(msg.what==1){
-                val h5Url=msg.obj as String
-                val intent=Intent(this@SplashActivity, WebActivity::class.java)
-                intent.putExtra("url", h5Url)
-                startActivity(intent)
-            }else{
-                val h5Url=msg.obj as String
-                val intent=Intent(this@SplashActivity, WebActivity::class.java)
-                intent.putExtra("url", h5Url)
-                startActivity(intent)
+           val jsonObject = JSONObject()
+            val h5Url=msg.obj as String
+            val intent=Intent(this@SplashActivity, WebActivity::class.java)
+            jsonObject.put("url",h5Url)
+            intent.putExtra("page", jsonObject.toString())
+            startActivity(intent)
+            if(msg.what!=1){
 
                 val advUrl=msg.obj as String
                 val advIntent=Intent(this@SplashActivity, WebActivity::class.java)
-                intent.putExtra("url", advUrl)
+                jsonObject.put("url",advUrl)
+                intent.putExtra("page", jsonObject.toString())
                 startActivity(advIntent)
             }
         }

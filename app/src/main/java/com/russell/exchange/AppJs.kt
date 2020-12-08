@@ -4,26 +4,43 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.text.TextUtils
 import android.util.Log
 import android.webkit.JavascriptInterface
+import androidx.core.app.ActivityCompat.startActivityForResult
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.gson.JsonObject
 import io.branch.referral.util.BranchEvent
 import java.util.*
+
 
 /**
 @author russell
 @description:
 @date : 2020/11/29 0:47
  */
-class AppJs(private val mContext:Context) {
+class AppJs(private val mContext: Context) {
+
+    var gaIdResult =""
+
+    init {
+        Thread {
+            try {
+                gaIdResult = AdvertisingIdClient.getAdvertisingIdInfo(mContext).toString()
+            }catch (e:Exception){
+            }
+        }.start()
+
+    }
 
 
 
@@ -39,8 +56,8 @@ class AppJs(private val mContext:Context) {
         return try {
             val tm=mContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             tm.deviceId
-        }catch (e:Exception){
-            UUID.randomUUID().toString().replace("-","")
+        }catch (e: Exception){
+            UUID.randomUUID().toString().replace("-", "")
         }
     }
 
@@ -52,7 +69,7 @@ class AppJs(private val mContext:Context) {
     fun getGoogleId(): String {
         var result=Settings.System.getString(mContext.contentResolver, Settings.System.ANDROID_ID)
         if(result.isEmpty()){
-            result=   UUID.randomUUID().toString().replace("-","")
+            result=   UUID.randomUUID().toString().replace("-", "")
         }
        return result
     }
@@ -71,11 +88,16 @@ class AppJs(private val mContext:Context) {
 //     * 看FCM推送的文档，有监听和获取令牌的方法
 //     * 详情见第八点
 //     */
-//    @JavascriptInterface
-//    fun takeFCMPushId(): String {
-//        //fcm生成的注册令牌
-//        //TODO
-//    }
+    @JavascriptInterface
+    fun takeFCMPushId(): String {
+    val sharedPreferences=mContext.getSharedPreferences("data",Context.MODE_PRIVATE)
+     return  try {
+         Log.d(TAG, "takeFCMPushId: "+sharedPreferences.getString("token",""))
+         sharedPreferences.getString("token","")!!
+     }catch (e:Exception){
+         ""
+     }
+    }
 
     /**
      * 集成branch包的时候已经带有Google Play Service核心jar包
@@ -83,18 +105,10 @@ class AppJs(private val mContext:Context) {
      * AdvertisingIdClient.getAdvertisingIdInfo() 异步方法
      */
     @JavascriptInterface
-    fun getGaId(): String? {
-        val lock = Object()
-        var result =""
-        synchronized(lock){
-            try {
-                result=AdvertisingIdClient.getAdvertisingIdInfo(mContext).toString()
-                lock.notifyAll()
-            }catch (e:java.lang.Exception){
-                lock.notifyAll()
-            }
-        }
-        return result
+    fun getGaId(): String {
+        //todo 为空
+        Log.d(TAG, "getGaId: "+System.currentTimeMillis())
+        return gaIdResult
     }
 
     /**
@@ -113,7 +127,30 @@ class AppJs(private val mContext:Context) {
      */
     @JavascriptInterface
     fun openGoogle(data: String) {
-        //TODO
+
+
+
+        mContext as WebActivity
+
+        mContext.runOnUiThread {
+            //初始化gso，server_client_id为添加的客户端id
+            //初始化gso，server_client_id为添加的客户端id
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(mContext.getString(R.string.server_client_id))
+                .requestEmail()
+                .build()
+            //初始化Google登录实例,activity为当前activity
+            //初始化Google登录实例,activity为当前activity
+            val mGoogleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(mContext, gso)
+            //登录前可以查看是否已经授权，已经授权则可不必重复授权，如果返回的额account不为空则已经授权，同理activity为当前activity
+            //登录前可以查看是否已经授权，已经授权则可不必重复授权，如果返回的额account不为空则已经授权，同理activity为当前activity
+            val account: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(mContext)
+            //如果未授权则可以调用登录，mGoogleSignInClient为初始化好的Google登录实例，RC_SIGN_IN为随意唯一返回标识码，int即可。
+            //如果未授权则可以调用登录，mGoogleSignInClient为初始化好的Google登录实例，RC_SIGN_IN为随意唯一返回标识码，int即可。
+            val signInIntent: Intent = mGoogleSignInClient.signInIntent
+            mContext.signData=data
+            mContext.startActivityForResult(signInIntent, mContext.RC_SIGN_IN)
+        }
     }
 
     /**
@@ -137,7 +174,9 @@ class AppJs(private val mContext:Context) {
      */
     @JavascriptInterface
     fun showTitleBar(visible: Boolean) {
-        //TODO
+        mContext as WebActivity
+
+        mContext.showTitleBar(visible)
     }
 
     /**
@@ -239,7 +278,12 @@ class AppJs(private val mContext:Context) {
      */
     @JavascriptInterface
     fun openPureBrowser(json: String) {
-        Log.v(TAG, "openPureBrowser json:$json")
+        mContext as WebActivity
+        mContext.runOnUiThread {
+            val intent=Intent().apply {
+                putExtra("page", json)
+            }
+            mContext.startActivity(intent) }
     }
 
     /**
@@ -268,8 +312,8 @@ class AppJs(private val mContext:Context) {
             val value = entry.value
             bundle.putString(entry.key, value.asString)
             branchEvent.addCustomDataProperty(
-                entry.key,
-                value.asString
+                    entry.key,
+                    value.asString
             )
         }
         branchEvent
@@ -292,8 +336,8 @@ class AppJs(private val mContext:Context) {
             val value = entry.value
             bundle.putString(entry.key, value.asString)
             branchEvent.addCustomDataProperty(
-                entry.key,
-                value.asString
+                    entry.key,
+                    value.asString
             )
         }
         branchEvent
@@ -310,8 +354,8 @@ class AppJs(private val mContext:Context) {
     @JavascriptInterface
     fun facebookEvent(eventName: String, valueToSum: Double, parameters: String) {
         Log.v(
-            TAG,
-            "facebookEvent:\neventName:${eventName}\nvalueToSum:$valueToSum\nparameters:$parameters"
+                TAG,
+                "facebookEvent:\neventName:${eventName}\nvalueToSum:$valueToSum\nparameters:$parameters"
         )
         val logger = AppEventsLogger.newLogger(mContext)
         val obj = JsonObject().getAsJsonObject(parameters)

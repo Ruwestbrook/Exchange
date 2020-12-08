@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -51,5 +52,9 @@ class ForumActivity : AppCompatActivity() {
             startActivity(Intent(this,NewTopicActivity::class.java))
         }
 
+    }
+
+    fun back(view: View) {
+        finish()
     }
 }

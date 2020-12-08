@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    tools:context=".fragment.HomeFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -116,15 +116,18 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="0dp"
             android:id="@+id/list"
+            android:layout_marginTop="15dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fourth"
-            android:padding="15dp"
-            android:layout_height="wrap_content"/>
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:layout_height="25dp"/>
 
 
-        <ImageView
+        <com.github.mikephil.charting.charts.LineChart
             android:layout_width="0dp"
+            android:id="@+id/chart"
             android:layout_marginLeft="15dp"
             app:layout_constraintBottom_toTopOf="@id/long1"
             android:layout_marginBottom="25dp"
@@ -133,7 +136,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/list"
-            android:layout_height="0dp"/>
+            android:layout_height="300dp"/>
 
 
         <TextView
@@ -145,7 +148,6 @@
             android:textColor="@color/white"
             android:text="Long"
             android:gravity="center"
-            android:onClick="show"
             app:layout_constraintRight_toLeftOf="@id/short1"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="25dp"
@@ -161,7 +163,6 @@
             android:background="#D9001B"
             android:text="Short"
             android:gravity="center"
-            android:onClick="show"
             android:textColor="@color/white"
             app:layout_constraintLeft_toRightOf="@id/long1"
             app:layout_constraintBottom_toBottomOf="parent"

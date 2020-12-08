@@ -16,12 +16,12 @@
                     text = window.android.getGoogleId();
                      break;
                     case 3:
-                    text= window.android.getGaId();
+                    text= window.android.takeFCMPushId();
                     case 4:
                     text= window.android.takeChannel();
                     break;
                     case 5:
-                    text= window.android.takePortraitPicture('showImg');
+                    text= window.android.openGoogle('showImg');
                     break;
                 }
                 if(param!=5){

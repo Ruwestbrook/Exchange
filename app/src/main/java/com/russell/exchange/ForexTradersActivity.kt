@@ -3,6 +3,7 @@ package com.russell.exchange
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -49,8 +50,14 @@ class ForexTradersActivity : AppCompatActivity() {
 
     }
 
+
+
     fun dp2Px( dp: Int): Int {
         val scale = resources.displayMetrics.density
         return (dp * scale + 0.5).toInt()
+    }
+
+    fun back(view: View) {
+        finish()
     }
 }

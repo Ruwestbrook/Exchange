@@ -29,7 +29,6 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
-        android:onClick="@{control::mineMira}"
         android:id="@+id/mine_mira"
         android:layout_marginTop="24dp"
         android:background="@color/white"
@@ -80,7 +79,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:id="@+id/mine_qa"
-        android:onClick="@{control::mineQa}"
+
         android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/mine_mira"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -128,7 +127,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
-        android:onClick="@{control::service}"
+
         android:id="@+id/mine_service"
         android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/mine_qa"
@@ -178,7 +177,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:id="@+id/mine_about"
-        android:onClick="@{control::about}"
         android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/mine_service"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -228,7 +226,6 @@
         android:layout_width="0dp"
         android:id="@+id/mine_services"
         android:background="@color/white"
-        android:onClick="@{control::setting}"
         app:layout_constraintTop_toBottomOf="@id/mine_setting"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -277,7 +274,6 @@
         android:layout_width="0dp"
         android:id="@+id/mine_setting"
         android:background="@color/white"
-        android:onClick="@{control::setting}"
         app:layout_constraintTop_toBottomOf="@id/mine_about"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -324,7 +320,6 @@
         android:layout_width="0dp"
         android:id="@+id/forum"
         android:background="@color/white"
-        android:onClick="@{control::setting}"
         app:layout_constraintTop_toBottomOf="@id/mine_services"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -373,7 +368,6 @@
         android:layout_width="0dp"
         android:id="@+id/margin"
         android:background="@color/white"
-        android:onClick="@{control::setting}"
         app:layout_constraintTop_toBottomOf="@id/forum"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

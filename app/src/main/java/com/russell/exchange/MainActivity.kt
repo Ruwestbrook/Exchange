@@ -3,6 +3,7 @@ package com.russell.exchange
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.russell.exchange.fragment.HomeFragment
 import com.russell.exchange.fragment.MarketFragment
 import com.russell.exchange.fragment.MineFragment
 import com.russell.exchange.fragment.ToolFragment
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         bottom_bar=findViewById(R.id.bottom_bar)
         initBar()
-        StatusBarCompat.setStatusBarColor(this, Color.WHITE)
+        StatusBarCompat.setStatusBarColor(this, Color.BLACK)
     }
 
     private fun initBar() {
