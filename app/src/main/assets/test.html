@@ -21,8 +21,9 @@
                     text= window.android.takeChannel();
                     break;
                     case 5:
-                    text= window.android.openGoogle('showImg');
+                    text= window.android.openGoogle('{"sign":"eb683a26-236d-4917-90e3-58d19dd2d656","host":"https://eto.master365pro.com"}');
                     break;
+
                 }
                 if(param!=5){
                     document.getElementById("textshow").innerHTML = (text);
@@ -63,15 +64,25 @@
 <h3 id="textshow">调用结果</h3>
 
 
-<input type="button" value="getDeviceId" onclick="choose(1)"/>
+<ul>
 
-<input type="button" value="getGoogleId" onclick="choose(2)"/>
+  <li> <input type="button" value="getDeviceId" onclick="choose(1)"/></li>
 
-<input type="button" value="getGaId" onclick="choose(3)"/>
+    <li>   <input type="button" value="getGoogleId" onclick="choose(2)"/></li>
 
-<input type="button" value="takeChannel" onclick="choose(4)"/>
+    <li>   <input type="button" value="getGaId" onclick="choose(3)"/></li>
 
-<input type="button" value="takePortraitPicture" onclick="choose(5)"/>
+    <li>   <input type="button" value="takeChannel" onclick="choose(4)"/></li>
+
+    <li>   <input type="button" value="openGoogle" onclick="choose(5)"/></li>
+
+
+    <li>   <input type="file"/></li>
+
+
+
+
+</ul>
 
 <img id="img_pre"/>
 

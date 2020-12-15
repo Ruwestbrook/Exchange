@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,7 @@ class SplashActivity : AppCompatActivity() {
 
 
     var imageView:ImageView?=null
+    var h5Url:String?=null
     var textView:TextView?=null
     private val handler= @SuppressLint("HandlerLeak")
     object:Handler(){
@@ -37,21 +39,26 @@ class SplashActivity : AppCompatActivity() {
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
            val jsonObject = JSONObject()
-            val h5Url=msg.obj as String
             val intent=Intent(this@SplashActivity, WebActivity::class.java)
             jsonObject.put("url",h5Url)
             intent.putExtra("page", jsonObject.toString())
+            Log.d(TAG, "handleMessage:startActivity webView ")
             startActivity(intent)
             if(msg.what!=1){
-
                 val advUrl=msg.obj as String
                 val advIntent=Intent(this@SplashActivity, WebActivity::class.java)
                 jsonObject.put("url",advUrl)
                 intent.putExtra("page", jsonObject.toString())
                 startActivity(advIntent)
             }
+            finish()
         }
 
+    }
+
+    override fun finish() {
+        super.finish()
+        handler.removeCallbacksAndMessages(null)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +66,13 @@ class SplashActivity : AppCompatActivity() {
         imageView=findViewById(R.id.image)
         textView=findViewById(R.id.jump)
 
+
+        Thread{
+            getMessage()
+        }.start()
+
     }
+    private  val TAG = "SplashActivity"
 
     private fun getMessage(){
 
@@ -86,16 +99,24 @@ class SplashActivity : AppCompatActivity() {
                     response.append(it)
                 }
             }
-            val jsonObject=JSONObject(response.toString())
+            Log.d(TAG, "getMessage: $response")
+            val responseMessage=JSONObject(response.toString())
+            val jsonObject=responseMessage.getJSONObject("data")
+            h5Url= jsonObject.getString("h5Url")
+
             if((jsonObject.get("status") as Int)==0 ){
-              if(jsonObject.getInt("advOn")==1){
+              if(jsonObject.getInt("advOn")==1 && jsonObject.has("advImg")){
                   val bitmap=returnBitMap(jsonObject.getString("advImg"))
                   if(bitmap!=null){
                       imageView?.setImageBitmap(bitmap)
                       imageView?.setOnClickListener {
                           handler.removeMessages(1)
-                          handler.sendEmptyMessage(2)
+                          val message=Message()
+                          message.obj=jsonObject.getString("advImg")
+                          message.what=2
+                          handler.sendMessage(message)
                       }
+                      textView?.visibility=View.VISIBLE
                       textView?.setOnClickListener {
                           handler.removeMessages(1)
                           handler.sendEmptyMessage(1)
@@ -104,13 +125,13 @@ class SplashActivity : AppCompatActivity() {
                       handler.sendEmptyMessageDelayed(1, 5000)
                   }
               }else{
-
-                  handler.sendEmptyMessageDelayed(1, 5000)
+                  handler.sendEmptyMessage(1)
               }
             }else{
-                startActivity(Intent(this, MainActivity::class.java))
+                handler.sendEmptyMessage(1)
             }
         }catch (e: Exception){
+            Log.d(TAG, "getMessage: $e")
             startActivity(Intent(this, MainActivity::class.java))
         }
 

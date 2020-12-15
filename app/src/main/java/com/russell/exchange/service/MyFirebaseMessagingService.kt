@@ -38,50 +38,46 @@ class MyFirebaseMessagingService :FirebaseMessagingService(){
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        Log.d(TAG, "onMessageReceived: ")
+        Log.d(TAG, "onMessageReceived: $remoteMessage")
+        var pushMessage: PushMessage?=null
         remoteMessage.data.isNotEmpty().let {
             Log.d(TAG, "Message data payload: " + remoteMessage.data)
+            Log.d(TAG, "onMessageReceived: $it")
             if (it) {
                 // Handle message within 10 seconds
-                val pushMessage: PushMessage = Gson().fromJson(
+                 pushMessage = Gson().fromJson(
                     remoteMessage.data["data"],
                     PushMessage::class.java
                 )
-                createNotification(baseContext, pushMessage)
+
             }
         }
-
-//        // Check if message contains a notification payload.
-//        remoteMessage.notification?.let {
-//            Log.d(TAG, "Message Notification Body: ${it.body}")
-//            showNotification(baseContext, it)
-//
-//        }
+        createNotification(baseContext, pushMessage)
     }
 
-    private fun createNotification(context: Context, pushMessageModel: PushMessage) {
+    private fun createNotification(context: Context, pushMessageModel: PushMessage?) {
         val channelId = getString(R.string.app_name)
         val notificationTitle: String
-        notificationTitle = if (!pushMessageModel.pushTopic.isNullOrBlank()) {
-            pushMessageModel.pushTopic!!
+        notificationTitle = if (!pushMessageModel?.pushTopic.isNullOrBlank()) {
+            pushMessageModel?.pushTopic!!
         } else {
             channelId
         }
         val builder = NotificationCompat.Builder(context, channelId).apply {
             setContentTitle(notificationTitle)
-            setContentText(pushMessageModel.pushContent)
+            setContentText(pushMessageModel?.pushContent)
             setAutoCancel(true)
             val createTime = try {
-                pushMessageModel.createTime?.toLong() ?: System.currentTimeMillis()
+                pushMessageModel?.createTime?.toLong() ?: System.currentTimeMillis()
             } catch (e: Exception) {
                 System.currentTimeMillis()
             }
             setWhen(createTime)
             val brand = Build.BRAND
             val intent = setPendingIntent(context, pushMessageModel)
-            setSmallIcon(R.mipmap.ic_launcher)
+            setSmallIcon(R.drawable.icon_app)
             if (!TextUtils.isEmpty(brand) && brand.equals("samsung", ignoreCase = true)) {
-                val bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher)
+                val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.icon_app)
                 setLargeIcon(bitmap)
             }
             setContentIntent(intent)
@@ -127,9 +123,9 @@ class MyFirebaseMessagingService :FirebaseMessagingService(){
     }
 
 
-    private fun setPendingIntent(context: Context, data: PushMessage): PendingIntent? {
+    private fun setPendingIntent(context: Context, data: PushMessage?): PendingIntent? {
         val intent: Intent?
-        val url: String? = data.url
+        val url: String? = data?.url
         if (TextUtils.isEmpty(url)) {
             val packageManager = context.packageManager
             intent = packageManager.getLaunchIntentForPackage(context.packageName)

@@ -24,6 +24,7 @@
             android:scaleType="centerInside"
             android:paddingTop="5dp"
             android:onClick="back"
+            android:id="@+id/backs"
             android:paddingBottom="5dp"
             android:layout_height="30dp"/>
 

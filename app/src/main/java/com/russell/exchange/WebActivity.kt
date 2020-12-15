@@ -3,8 +3,6 @@ package com.russell.exchange
 import android.Manifest
 import android.R.attr
 import android.annotation.SuppressLint
-import android.app.Activity
-
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -12,6 +10,9 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.text.TextUtils
 import android.util.Base64
 import android.util.Log
 import android.view.View
@@ -19,23 +20,20 @@ import android.webkit.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.luck.picture.lib.PictureSelector
-import com.luck.picture.lib.config.PictureConfig
-import com.luck.picture.lib.config.PictureMimeType
 import com.russell.exchange.fragment.PermissionX
+import com.yalantis.ucrop.util.FileUtils
 import org.json.JSONObject
 import qiu.niorgai.StatusBarCompat
-import java.io.BufferedReader
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.InputStreamReader
+import java.io.*
 import java.net.HttpURLConnection
+import java.net.URI
 import java.net.URL
+import java.net.URLDecoder
 
 
 /**
@@ -47,6 +45,7 @@ class WebActivity : AppCompatActivity() {
 
     private lateinit var webView:WebView
     val RC_SIGN_IN=1
+    val FILECHOOSER_RESULTCODE=9
     private lateinit var webTitle:TextView
     private lateinit var constraintLayout: ConstraintLayout
     private var titleText:String? = null
@@ -55,17 +54,26 @@ class WebActivity : AppCompatActivity() {
     private var rewriteTitle=true
     //true:web回退(点击返回键webview可以回退就回退，无法回退的时候关闭该页面)|false(点击返回键关闭该页面) 直接关闭页面
     private var webBack=false
-
+    private var mUploadCallBackAboveL:ValueCallback<Array<Uri>>?=null
 
     @SuppressLint("SetJavaScriptEnabled", "QueryPermissionsNeeded")
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate: ")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
-        PermissionX.request(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE,callback=null)
+        PermissionX.request(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                callback = null
+        )
         StatusBarCompat.setStatusBarColor(this, Color.BLACK)
         webView=findViewById(R.id.web_view)
         webTitle=findViewById(R.id.web_title)
         constraintLayout=findViewById(R.id.title_view)
+        Log.d(TAG, "onCreate: 222")
         webView.apply {
             WebView.setWebContentsDebuggingEnabled(false)
             //  clearHistory()
@@ -74,9 +82,17 @@ class WebActivity : AppCompatActivity() {
             addJavascriptInterface(AppJs(this@WebActivity), "AppJs")
             setLayerType(View.LAYER_TYPE_HARDWARE, null)
 
-                webViewClient=object :WebViewClient(){
-
+            webChromeClient=object :WebChromeClient(){
+                override fun onShowFileChooser(
+                        webView: WebView?,
+                        filePathCallback: ValueCallback<Array<Uri>>?,
+                        fileChooserParams: FileChooserParams?
+                ): Boolean {
+                    mUploadCallBackAboveL = filePathCallback
+                    showFileChooser()
+                    return true
                 }
+            }
             webViewClient=object :WebViewClient(){
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
@@ -86,7 +102,11 @@ class WebActivity : AppCompatActivity() {
                     showTitle()
                 }
 
-                override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                override fun onReceivedError(
+                        view: WebView?,
+                        request: WebResourceRequest?,
+                        error: WebResourceError?
+                ) {
                     super.onReceivedError(view, request, error)
                    // loadResult(false)
                 }
@@ -133,12 +153,10 @@ class WebActivity : AppCompatActivity() {
                 }
             }
         }
-
-        webView.loadUrl("file:///android_asset/test.html")
         webView.addJavascriptInterface(AppJs(this), "android")
         init()
-
-
+ //    webView.loadUrl("file:///android_asset/test.html")
+//        Log.d(TAG, "onCreate: 44444444444")
     }
 
     /**
@@ -163,10 +181,12 @@ class WebActivity : AppCompatActivity() {
      * }
      */
     private fun init() {
+        Log.d(TAG, "init: ")
         val data=intent.getStringExtra("page")
         if(data==null || data.isEmpty()){
             return
         }
+        Log.d(TAG, "init: isEmptyisEmpty")
         val jsonObject=JSONObject(data)
         if(jsonObject.has("title"))
             titleText=jsonObject.getString("title")
@@ -191,14 +211,18 @@ class WebActivity : AppCompatActivity() {
             postData=jsonObject.getString("postData")
         }
         var url=""
+
         if(jsonObject.has("url")){
             url=jsonObject.getString("url")
         }
+        Log.d(TAG, "init: url=$url")
         var html=""
         if(jsonObject.has("html")){
             html=jsonObject.getString("html")
         }
-         webBack=jsonObject.getBoolean("webBack")
+        if(jsonObject.has("webBack")){
+            webBack=jsonObject.getBoolean("webBack")
+        }
         if(url.isNotEmpty()){
             if(postData.isNotEmpty()){
                 webView.postUrl(url, postData.toByteArray())
@@ -221,6 +245,38 @@ class WebActivity : AppCompatActivity() {
             constraintLayout.visibility=View.GONE
         }
 
+    }
+
+    private var mCameraFilePath:String?=null
+    /**
+     * 打开选择文件/相机
+     */
+    private fun showFileChooser() {
+
+//        Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+//        intent1.setDataAndType(
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        val intent1 = Intent(Intent.ACTION_GET_CONTENT)
+        intent1.addCategory(Intent.CATEGORY_OPENABLE)
+        intent1.type = "*/*"
+        val intent2 = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        mCameraFilePath = Environment.getExternalStorageDirectory().absolutePath + File.separator +
+                System.currentTimeMillis().toString() + ".jpg"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            // android7.0注意uri的获取方式改变
+            val photoOutputUri = FileProvider.getUriForFile(
+                    this@WebActivity,
+                    BuildConfig.APPLICATION_ID + ".fileProvider",
+                    File(mCameraFilePath))
+            intent2.putExtra(MediaStore.EXTRA_OUTPUT, photoOutputUri)
+        } else {
+            intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(File(mCameraFilePath)))
+        }
+        val chooser = Intent(Intent.ACTION_CHOOSER)
+        chooser.putExtra(Intent.EXTRA_TITLE, "File Chooser")
+        chooser.putExtra(Intent.EXTRA_INTENT, intent1)
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(intent2))
+        startActivityForResult(chooser, FILECHOOSER_RESULTCODE)
     }
 
     private fun showSaveImageDialog(result: WebView.HitTestResult) {
@@ -252,61 +308,100 @@ class WebActivity : AppCompatActivity() {
 
 
     private  val TAG = "WebActivity"
+    private  val CHOOSE_PHOTO = 188
     var callbackMethod:String?=null
     fun takePicture(name: String){
         callbackMethod=name
-
-
-        PictureSelector.create(this)
-                .openGallery(PictureMimeType.ofImage())
-                .forResult(PictureConfig.CHOOSE_REQUEST)
-
+        val intent = Intent()
+        intent.action = Intent.ACTION_PICK
+        intent.type = "image/*"
+        startActivityForResult(intent, CHOOSE_PHOTO)
 
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d(TAG, "onActivityResult: resultCode=$resultCode,requestCode=$requestCode")
-        if (resultCode == RESULT_OK) {
             when (requestCode) {
-                PictureConfig.CHOOSE_REQUEST -> {
-
-                    // 图片选择结果回调
-                    val selectList = PictureSelector.obtainMultipleResult(data)
-                    // 例如 LocalMedia 里面返回三种 path
-                    // 1.media.getPath(); 为原图 path
-                    // 2.media.getCutPath();为裁剪后 path，需判断 media.isCut();是否为 true
-                    // 3.media.getCompressPath();为压缩后 path，需判断 media.isCompressed();是否为 true
-                    // 如果裁剪并压缩了，以取压缩路径为准，因为是先裁剪后压缩的
-                    if (selectList.size > 0) {
-                        runOnUiThread {
-                            var str = bitmapToBase64(BitmapFactory.decodeFile(selectList[0].path))
-                            str = str?.replace("\\s*", "")
-                            val builder = StringBuilder(callbackMethod)
-                            builder.append("('data:image/png;base64,$str')")
-                            val methodName = builder.toString()
-                            val javaScript = "javascript:$methodName"
-                            Log.d(TAG, "takePicture: $javaScript")
-                            webView.evaluateJavascript(javaScript, null)
-                        }
-
+                CHOOSE_PHOTO -> {
+                    runOnUiThread {
+                        val uri: Uri = data?.data!! //获取图片uri
+                        val pfd = contentResolver.openFileDescriptor(uri, "r")
+                        val bitmap = BitmapFactory.decodeFileDescriptor(pfd?.fileDescriptor)
+                        var str = bitmapToBase64(bitmap)
+                        str = str?.replace("\\s*", "")
+                        val builder = StringBuilder(callbackMethod)
+                        builder.append("('data:image/png;base64,$str')")
+                        val methodName = builder.toString()
+                        val javaScript = "javascript:$methodName"
+                        Log.d(TAG, "takePicture: $javaScript")
+                        webView.evaluateJavascript(javaScript, null)
                     }
+
 
                 }
 
                 RC_SIGN_IN -> {
 
-                    val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-                    val account: GoogleSignInAccount?
+
                     try {
+                        val task: Task<GoogleSignInAccount> =
+                                GoogleSignIn.getSignedInAccountFromIntent(
+                                        data
+                                )
+                        val account: GoogleSignInAccount?
                         account = task.getResult(ApiException::class.java)
                         login(account)
+                        Log.d(TAG, "onActivityResult: ${account?.email}")
+                        Log.d(TAG, "onActivityResult: ${account?.displayName}")
                     } catch (e: ApiException) {
-
+                        Log.d(TAG, "onActivityResult: ${e.toString()}")
                     }
 
                 }
             }
+      //  }
+
+
+        if (requestCode == FILECHOOSER_RESULTCODE) {
+            var result: Uri? = if (resultCode != RESULT_OK) null else data?.data
+            if (result == null && !TextUtils.isEmpty(mCameraFilePath)) {
+                // 看是否从相机返回
+                val cameraFile = File(mCameraFilePath!!)
+                if (cameraFile.exists()) {
+                    result = Uri.fromFile(cameraFile)
+                    sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, result))
+                }
+            }
+            if (result != null) {
+                val path: String = FileUtils.getPath(this, result)
+                if (!TextUtils.isEmpty(path)) {
+                    val f = File(path)
+                    if (f.exists() && f.isFile) {
+                        val newUri = Uri.fromFile(f)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            if (mUploadCallBackAboveL != null) {
+                                if (newUri != null) {
+                                    mUploadCallBackAboveL!!.onReceiveValue(arrayOf(newUri))
+                                    mUploadCallBackAboveL = null
+                                    return
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            clearUploadMessage()
+            return
+        }
+
+    }
+
+    private fun clearUploadMessage() {
+        if (mUploadCallBackAboveL != null) {
+            mUploadCallBackAboveL!!.onReceiveValue(null)
+            mUploadCallBackAboveL = null
         }
     }
 
@@ -366,33 +461,36 @@ class WebActivity : AppCompatActivity() {
     }
 
 
-    private fun login(account:GoogleSignInAccount?){
+    private fun login(account: GoogleSignInAccount?){
 
         try {
 
-            val sign=JSONObject(signData)
-            val host=sign.getString("host")
-            var connection: HttpURLConnection?=null
-            val response=StringBuilder()
-            val url= URL(
-                host +
-                        "/user/google/doLogin2.do?" +
-                        "id=" +account?.id+
-                        "&name=" +account?.displayName+
-                        "&type=google" +
-                        "&email=" + account?.email+
-                        "&sign=" + sign.getString("sign")
-            )
-            connection=url.openConnection() as HttpURLConnection
-            connection.connectTimeout =60000
-            connection.readTimeout =60000
-            val input=connection.inputStream
-            val reader= BufferedReader(InputStreamReader(input))
-            reader.use {
-                reader.forEachLine {
-                    response.append(it)
+            Thread {
+                Log.d(TAG, "login: $signData")
+                val sign = JSONObject(signData)
+                val host = sign.getString("host")
+                var connection: HttpURLConnection? = null
+                val response = StringBuilder()
+                val url = URL(
+                        host +
+                                "/user/google/doLogin2.do?" +
+                                "id=" + account?.id +
+                                "&name=" + URLDecoder.decode( account?.displayName) +
+                                "&type=0" +
+                                "&email=" + account?.email +
+                                "&sign=" + sign.getString("sign")
+                )
+                Log.d(TAG, "login: $url")
+                connection=url.openConnection() as HttpURLConnection
+                connection.connectTimeout =60000
+                connection.readTimeout =60000
+                val input=connection.inputStream
+                val reader=BufferedReader(InputStreamReader(input))
+                reader.use {
+                    reader.forEachLine {
+                        response.append(it)
+                    }
                 }
-            }
             val jsonObject=JSONObject(response.toString())
 
             if(jsonObject.getInt("code")==200){
@@ -400,18 +498,27 @@ class WebActivity : AppCompatActivity() {
                 val jsonData=jsonObject.getJSONObject("data")
 
                 if(jsonData.has("token1")){
-                    syncCookie(host,jsonData.getString("token1"))
-                    syncCookie(jsonData.getString("url"),jsonData.getString("token1"))
+                    syncCookie(host, jsonData.getString("token1"),"token1")
+                    syncCookie(jsonData.getString("url"), jsonData.getString("token1"),"token1")
                 }
                 if(jsonData.has("token2")){
-                    syncCookie(host,jsonData.getString("token2"))
-                    syncCookie(jsonData.getString("url"),jsonData.getString("token2"))
+                    syncCookie(host, jsonData.getString("token2"),"token2")
+                    syncCookie(jsonData.getString("url"), jsonData.getString("token2"),"token2")
                 }
-                webView.loadUrl(jsonData.getString("url"))
+                val advIntent=Intent(this@WebActivity, WebActivity::class.java)
+                var url=jsonData.getString("url")
+                if(url.contains("\\u002F")){
+                    url=Uri.decode(url)
+                }
+
+                runOnUiThread {
+                    webView.loadUrl(url)
+                }
             }
+            }.start()
 
         }catch (e: Exception){
-
+            Log.d(TAG, "login Exception: $e")
         }
 
     }
@@ -424,20 +531,23 @@ class WebActivity : AppCompatActivity() {
      * @param context 上下文
      * @param url     可以使用[domain][host]
      */
-    private fun syncCookie(host: String,token:String) {
+    private fun syncCookie(host: String, token: String, name: String) {
         val cookieManager = CookieManager.getInstance()
-        cookieManager.setCookie(host, "token1=$token;expires=1; path=/")
+        cookieManager.setCookie(host, "$name=$token;expires=1; path=/")
         CookieSyncManager.getInstance().sync()
 
     }
 
     fun showTitleBar(visible: Boolean) {
+        Log.d(TAG, "showTitleBar: $visible")
         showTitle=visible
-        if(showTitle){
-            constraintLayout.visibility=View.VISIBLE
-            webTitle.text=titleText
-        }else{
-            constraintLayout.visibility=View.GONE
+        runOnUiThread {
+            if(showTitle){
+                constraintLayout.visibility=View.VISIBLE
+                webTitle.text=titleText
+            }else{
+                constraintLayout.visibility=View.GONE
+            }
         }
     }
 

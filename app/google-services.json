@@ -1,1 +1,85 @@
-{"web":{"client_id":"62273892812-c78u1rsf8dp7rsco6bukvb3plgp2u1mb.apps.googleusercontent.com","project_id":"etradeinvest-dffec","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"7mHNUL6KGUd4EbJfS1Yrofqg"}}
+{
+  "project_info": {
+    "project_number": "62273892812",
+    "firebase_url": "https://etradeinvest-dffec.firebaseio.com",
+    "project_id": "etradeinvest-dffec",
+    "storage_bucket": "etradeinvest-dffec.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62273892812:android:4efd10971ef1ef34e4ad69",
+        "android_client_info": {
+          "package_name": "com.exchange.etrade.invest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62273892812-g5fu1o4ja0bgu61e87ucq03e1q1tv3ib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.exchange.etrade.invest",
+            "certificate_hash": "3293f1b396d288ab20f43be9af42c47cd51d00dc"
+          }
+        },
+        {
+          "client_id": "62273892812-46n4br2dg0h38p2jti60ammmlelqpoi6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEyWNU21lqCx6A0_NGHxBG66EmcpCCKPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62273892812-46n4br2dg0h38p2jti60ammmlelqpoi6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62273892812:android:68a6e29543364cd4e4ad69",
+        "android_client_info": {
+          "package_name": "com.fpiopv.etradeinvest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62273892812-0cf6n7visk7g2bfgcvrd05f2pd9oh97m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fpiopv.etradeinvest",
+            "certificate_hash": "afb7cca6ab0f17adc3cfb2e67a00558957b16cca"
+          }
+        },
+        {
+          "client_id": "62273892812-46n4br2dg0h38p2jti60ammmlelqpoi6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEyWNU21lqCx6A0_NGHxBG66EmcpCCKPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62273892812-46n4br2dg0h38p2jti60ammmlelqpoi6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

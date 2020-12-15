@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.iid.FirebaseInstanceId
 import com.google.gson.JsonObject
 import io.branch.referral.util.BranchEvent
 import java.util.*
@@ -36,7 +37,7 @@ class AppJs(private val mContext: Context) {
         Thread {
             try {
                 gaIdResult = AdvertisingIdClient.getAdvertisingIdInfo(mContext).toString()
-            }catch (e:Exception){
+            }catch (e: Exception){
             }
         }.start()
 
@@ -57,7 +58,15 @@ class AppJs(private val mContext: Context) {
             val tm=mContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             tm.deviceId
         }catch (e: Exception){
-            UUID.randomUUID().toString().replace("-", "")
+            val sharedPreferences=mContext.getSharedPreferences("data", Context.MODE_PRIVATE)
+            val data= sharedPreferences.getString("DeviceId", "")
+            return if(data?.isNotEmpty()==true){
+                data
+            }else{
+             val text=   UUID.randomUUID().toString().replace("-", "")
+                sharedPreferences.edit().putString("DeviceId",text).apply()
+                text
+            }
         }
     }
 
@@ -69,7 +78,15 @@ class AppJs(private val mContext: Context) {
     fun getGoogleId(): String {
         var result=Settings.System.getString(mContext.contentResolver, Settings.System.ANDROID_ID)
         if(result.isEmpty()){
-            result=   UUID.randomUUID().toString().replace("-", "")
+            val sharedPreferences=mContext.getSharedPreferences("data", Context.MODE_PRIVATE)
+            val data= sharedPreferences.getString("GoogleId", "")
+            result= if(data?.isNotEmpty()==true){
+                data
+            }else{
+                val text=   UUID.randomUUID().toString().replace("-", "")
+                sharedPreferences.edit().putString("GoogleId",text).apply()
+                text
+            }
         }
        return result
     }
@@ -90,11 +107,11 @@ class AppJs(private val mContext: Context) {
 //     */
     @JavascriptInterface
     fun takeFCMPushId(): String {
-    val sharedPreferences=mContext.getSharedPreferences("data",Context.MODE_PRIVATE)
+    val sharedPreferences=mContext.getSharedPreferences("data", Context.MODE_PRIVATE)
      return  try {
-         Log.d(TAG, "takeFCMPushId: "+sharedPreferences.getString("token",""))
-         sharedPreferences.getString("token","")!!
-     }catch (e:Exception){
+         Log.d(TAG, "takeFCMPushId: " + sharedPreferences.getString("token", ""))
+         sharedPreferences.getString("token", "")!!
+     }catch (e: Exception){
          ""
      }
     }
@@ -107,7 +124,7 @@ class AppJs(private val mContext: Context) {
     @JavascriptInterface
     fun getGaId(): String {
         //todo 为空
-        Log.d(TAG, "getGaId: "+System.currentTimeMillis())
+        Log.d(TAG, "getGaId: " + System.currentTimeMillis())
         return gaIdResult
     }
 
@@ -128,28 +145,24 @@ class AppJs(private val mContext: Context) {
     @JavascriptInterface
     fun openGoogle(data: String) {
 
-
+        Log.d(TAG, "openGoogle: 1")
 
         mContext as WebActivity
 
         mContext.runOnUiThread {
-            //初始化gso，server_client_id为添加的客户端id
-            //初始化gso，server_client_id为添加的客户端id
-            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(mContext.getString(R.string.server_client_id))
-                .requestEmail()
-                .build()
-            //初始化Google登录实例,activity为当前activity
-            //初始化Google登录实例,activity为当前activity
-            val mGoogleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(mContext, gso)
-            //登录前可以查看是否已经授权，已经授权则可不必重复授权，如果返回的额account不为空则已经授权，同理activity为当前activity
-            //登录前可以查看是否已经授权，已经授权则可不必重复授权，如果返回的额account不为空则已经授权，同理activity为当前activity
-            val account: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(mContext)
-            //如果未授权则可以调用登录，mGoogleSignInClient为初始化好的Google登录实例，RC_SIGN_IN为随意唯一返回标识码，int即可。
-            //如果未授权则可以调用登录，mGoogleSignInClient为初始化好的Google登录实例，RC_SIGN_IN为随意唯一返回标识码，int即可。
-            val signInIntent: Intent = mGoogleSignInClient.signInIntent
-            mContext.signData=data
-            mContext.startActivityForResult(signInIntent, mContext.RC_SIGN_IN)
+           try {
+               val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                   .requestIdToken(mContext.resources.getString(R.string.server_client_id))
+                       .requestId()
+                       .requestEmail()
+                       .requestProfile()
+                       .build()
+               val mGoogleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(mContext, gso)
+               mContext.signData=data
+               val signInIntent = mGoogleSignInClient.signInIntent
+               mContext.startActivityForResult(signInIntent, mContext.RC_SIGN_IN)
+           }catch (e:Exception){
+           }
         }
     }
 
@@ -280,7 +293,7 @@ class AppJs(private val mContext: Context) {
     fun openPureBrowser(json: String) {
         mContext as WebActivity
         mContext.runOnUiThread {
-            val intent=Intent().apply {
+            val intent=Intent(mContext,WebActivity::class.java).apply {
                 putExtra("page", json)
             }
             mContext.startActivity(intent) }

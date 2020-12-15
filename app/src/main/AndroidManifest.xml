@@ -11,7 +11,21 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+
+
+
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
 
     <application
         android:name=".CustomApplication"
@@ -23,16 +37,13 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/Theme.Exchange"
         tools:targetApi="n">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".SplashActivity">
-
-
             <!-- Branch URI Scheme -->
             <intent-filter>
                 <data android:scheme="etrade" />
@@ -78,7 +89,8 @@
         <activity android:name=".MarginCalculatorActivity" />
         <activity android:name=".VideoActivity" />
         <activity android:name=".VActivity" />
-        <activity android:name=".WebActivity" >
+        <activity android:name=".WebActivity"  android:windowSoftInputMode="adjustPan|adjustResize">
+
 
         </activity>
         <activity android:name=".ForexCalendarActivity" />
@@ -99,6 +111,17 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.exchange.etrade.invest.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths_app" />
+        </provider>
 
 
     </application>
