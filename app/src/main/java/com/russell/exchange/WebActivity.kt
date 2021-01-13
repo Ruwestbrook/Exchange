@@ -1,7 +1,6 @@
 package com.russell.exchange
 
 import android.Manifest
-import android.R.attr
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,28 +9,25 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.text.TextUtils
 import android.util.Base64
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.webkit.*
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.FileProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.russell.exchange.fragment.PermissionX
-import com.yalantis.ucrop.util.FileUtils
+import com.russell.exchange.service.FileUtils
 import org.json.JSONObject
 import qiu.niorgai.StatusBarCompat
 import java.io.*
 import java.net.HttpURLConnection
-import java.net.URI
 import java.net.URL
 import java.net.URLDecoder
 
@@ -53,7 +49,7 @@ class WebActivity : AppCompatActivity() {
     private var showTitle=false
     private var rewriteTitle=true
     //true:web回退(点击返回键webview可以回退就回退，无法回退的时候关闭该页面)|false(点击返回键关闭该页面) 直接关闭页面
-    private var webBack=false
+    private var webBack=true
     private var mUploadCallBackAboveL:ValueCallback<Array<Uri>>?=null
 
     @SuppressLint("SetJavaScriptEnabled", "QueryPermissionsNeeded")
@@ -62,12 +58,12 @@ class WebActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web)
         PermissionX.request(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA,
-                Manifest.permission.CALL_PHONE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                callback = null
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA,
+            Manifest.permission.CALL_PHONE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            callback = null
         )
         StatusBarCompat.setStatusBarColor(this, Color.BLACK)
         webView=findViewById(R.id.web_view)
@@ -84,14 +80,16 @@ class WebActivity : AppCompatActivity() {
 
             webChromeClient=object :WebChromeClient(){
                 override fun onShowFileChooser(
-                        webView: WebView?,
-                        filePathCallback: ValueCallback<Array<Uri>>?,
-                        fileChooserParams: FileChooserParams?
+                    webView: WebView?,
+                    filePathCallback: ValueCallback<Array<Uri>>?,
+                    fileChooserParams: FileChooserParams?
                 ): Boolean {
                     mUploadCallBackAboveL = filePathCallback
                     showFileChooser()
                     return true
                 }
+
+
             }
             webViewClient=object :WebViewClient(){
                 override fun onPageFinished(view: WebView?, url: String?) {
@@ -103,9 +101,9 @@ class WebActivity : AppCompatActivity() {
                 }
 
                 override fun onReceivedError(
-                        view: WebView?,
-                        request: WebResourceRequest?,
-                        error: WebResourceError?
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?
                 ) {
                     super.onReceivedError(view, request, error)
                    // loadResult(false)
@@ -155,9 +153,13 @@ class WebActivity : AppCompatActivity() {
         }
         webView.addJavascriptInterface(AppJs(this), "android")
         init()
- //    webView.loadUrl("file:///android_asset/test.html")
-//        Log.d(TAG, "onCreate: 44444444444")
+     // webView.loadUrl("file:///android_asset/test.html")
+
+
     }
+
+
+
 
     /**
      * 打开一个基本配置的webview （不修改UA、可以缓存）
@@ -253,30 +255,11 @@ class WebActivity : AppCompatActivity() {
      */
     private fun showFileChooser() {
 
-//        Intent intent1 = new Intent(Intent.ACTION_PICK, null);
-//        intent1.setDataAndType(
-//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        val intent1 = Intent(Intent.ACTION_GET_CONTENT)
-        intent1.addCategory(Intent.CATEGORY_OPENABLE)
-        intent1.type = "*/*"
-        val intent2 = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        mCameraFilePath = Environment.getExternalStorageDirectory().absolutePath + File.separator +
-                System.currentTimeMillis().toString() + ".jpg"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            // android7.0注意uri的获取方式改变
-            val photoOutputUri = FileProvider.getUriForFile(
-                    this@WebActivity,
-                    BuildConfig.APPLICATION_ID + ".fileProvider",
-                    File(mCameraFilePath))
-            intent2.putExtra(MediaStore.EXTRA_OUTPUT, photoOutputUri)
-        } else {
-            intent2.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(File(mCameraFilePath)))
-        }
-        val chooser = Intent(Intent.ACTION_CHOOSER)
-        chooser.putExtra(Intent.EXTRA_TITLE, "File Chooser")
-        chooser.putExtra(Intent.EXTRA_INTENT, intent1)
-        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(intent2))
-        startActivityForResult(chooser, FILECHOOSER_RESULTCODE)
+        val i = Intent(Intent.ACTION_GET_CONTENT)
+        i.addCategory(Intent.CATEGORY_OPENABLE)
+        i.type = "*/*" //文件上传
+        startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE)
+
     }
 
     private fun showSaveImageDialog(result: WebView.HitTestResult) {
@@ -347,9 +330,9 @@ class WebActivity : AppCompatActivity() {
 
                     try {
                         val task: Task<GoogleSignInAccount> =
-                                GoogleSignIn.getSignedInAccountFromIntent(
-                                        data
-                                )
+                            GoogleSignIn.getSignedInAccountFromIntent(
+                                data
+                            )
                         val account: GoogleSignInAccount?
                         account = task.getResult(ApiException::class.java)
                         login(account)
@@ -366,17 +349,10 @@ class WebActivity : AppCompatActivity() {
 
         if (requestCode == FILECHOOSER_RESULTCODE) {
             var result: Uri? = if (resultCode != RESULT_OK) null else data?.data
-            if (result == null && !TextUtils.isEmpty(mCameraFilePath)) {
-                // 看是否从相机返回
-                val cameraFile = File(mCameraFilePath!!)
-                if (cameraFile.exists()) {
-                    result = Uri.fromFile(cameraFile)
-                    sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, result))
-                }
-            }
+            Log.d(TAG, "onActivityResult: $result")
             if (result != null) {
-                val path: String = FileUtils.getPath(this, result)
-                if (!TextUtils.isEmpty(path)) {
+                val path: String? = FileUtils.getPath(this, result)
+                if (path?.isNotEmpty()==true) {
                     val f = File(path)
                     if (f.exists() && f.isFile) {
                         val newUri = Uri.fromFile(f)
@@ -443,7 +419,11 @@ class WebActivity : AppCompatActivity() {
     fun back(view: View?) {
         if(webBack){
             if(webView.canGoBack()){
-                webView.goBack()
+                if(webView.copyBackForwardList().size <2){
+                    finish()
+                }else{
+                    webView.goBack()
+                }
             }else{
                 finish()
             }
@@ -451,6 +431,7 @@ class WebActivity : AppCompatActivity() {
             finish()
         }
     }
+
 
     //是否禁止返回键 1:禁止
     override fun onBackPressed() {
@@ -472,13 +453,13 @@ class WebActivity : AppCompatActivity() {
                 var connection: HttpURLConnection? = null
                 val response = StringBuilder()
                 val url = URL(
-                        host +
-                                "/user/google/doLogin2.do?" +
-                                "id=" + account?.id +
-                                "&name=" + URLDecoder.decode( account?.displayName) +
-                                "&type=0" +
-                                "&email=" + account?.email +
-                                "&sign=" + sign.getString("sign")
+                    host +
+                            "/user/google/doLogin2.do?" +
+                            "id=" + account?.id +
+                            "&name=" + URLDecoder.decode(account?.displayName) +
+                            "&type=0" +
+                            "&email=" + account?.email +
+                            "&sign=" + sign.getString("sign")
                 )
                 Log.d(TAG, "login: $url")
                 connection=url.openConnection() as HttpURLConnection
@@ -498,12 +479,12 @@ class WebActivity : AppCompatActivity() {
                 val jsonData=jsonObject.getJSONObject("data")
 
                 if(jsonData.has("token1")){
-                    syncCookie(host, jsonData.getString("token1"),"token1")
-                    syncCookie(jsonData.getString("url"), jsonData.getString("token1"),"token1")
+                    syncCookie(host, jsonData.getString("token1"), "token1")
+                    syncCookie(jsonData.getString("url"), jsonData.getString("token1"), "token1")
                 }
                 if(jsonData.has("token2")){
-                    syncCookie(host, jsonData.getString("token2"),"token2")
-                    syncCookie(jsonData.getString("url"), jsonData.getString("token2"),"token2")
+                    syncCookie(host, jsonData.getString("token2"), "token2")
+                    syncCookie(jsonData.getString("url"), jsonData.getString("token2"), "token2")
                 }
                 val advIntent=Intent(this@WebActivity, WebActivity::class.java)
                 var url=jsonData.getString("url")
